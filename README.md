@@ -1,22 +1,20 @@
-# Driver e Parser do Sensor IMU MPU-6050 (ROS 2)
+# Driver e Parser do Sensor IMU MPU-6050 (C++ / ROS 2)
 
-Repositório com a implementação em C++ para leitura serial, decodificação de pacotes de bytes e publicação de dados inerciais do sensor MPU-6050 utilizando ROS 2 Humble.
+Repositório com a implementação em C++ orientado a objetos para leitura serial, decodificação de pacotes de bytes e conversão física dos dados do sensor inercial MPU-6050, estruturado e compilado como um pacote ROS 2 (`ament_cmake`).
 
 ## Estrutura do Projeto
 
-- `sensor_core` (`src/core` e `src/example`): Biblioteca C++ orientada a objetos contendo o parser de pacotes de 14 bytes (`MPUParser`) e a interface de leitura serial (`MPUSerialReader`), com fallback automático para pacotes simulados.
-- `main_app` (`src/main/main.cpp`): Executável do nó ROS 2 (`mpu_publisher_node`) responsável por amostrar o sensor periodicamente e publicar os dados na rede DDS.
+- `sensor_core` (`src/core` e `src/example`): Biblioteca C++ contendo a lógica de conversão de bytes (`MPUParser`) e a interface de comunicação serial (`MPUSerialReader`).
+- `main_app` (`src/main/main.cpp`): Aplicação principal que inicializa a leitura serial (com fallback automático para pacote simulado de demonstração) e exibe as grandezas físicas processadas no terminal.
 - `test_core` (`test/test_core.cpp`): Bateria de testes unitários integrada ao CTest para validação da conversão e integridade dos dados orientados a objetos.
 
-## Especificações de Publicação (Padrão REP-103)
+## Especificações de Processamento e Conversão
 
-- **Tópico de publicação:** `/imu/data_raw` (`sensor_msgs/msg/Imu`)
-- **Frequência de amostragem:** 50 Hz (ciclo de 20 ms via `WallTimer`)
-- **Frame de referência:** `imu_link`
-- **Conversão de Unidades para o Sistema Internacional (SI):**
-  - Aceleração Linear: $\text{g} \rightarrow \text{m/s}^2$ ($\times 9.80665$)
-  - Velocidade Angular: $\text{deg/s} \rightarrow \text{rad/s}$ ($\times \frac{\pi}{180}$)
-  - Orientação: `orientation_covariance[0] = -1.0` (indicando dados brutos sem estimativa de quaternion acoplada)
+- **Protocolo de leitura:** Pacote bruto de 14 bytes contínuos (`int16_t` *big-endian* para cada eixo).
+- **Fatores de Escala e Conversão Física:**
+  - Acelerômetro ($\pm 2\text{g}$): $\text{Valor Bruto} / 16384.0 \rightarrow \text{g}$
+  - Giroscópio ($\pm 250^\circ/\text{s}$): $\text{Valor Bruto} / 131.0 \rightarrow \text{deg/s}$
+  - Temperatura: $(\text{Valor Bruto} / 340.0) + 36.53 \rightarrow ^\circ\text{C}$
 
 ## Como Compilar e Executar
 
