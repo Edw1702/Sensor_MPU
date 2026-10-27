@@ -1,6 +1,6 @@
-# Driver e Parser do Sensor IMU MPU-6050 (C++ / ROS 2)
+# Driver e Parser do Sensor IMU MPU-6050 (C++ / Python)
 
-Repositório com a implementação em C++ orientado a objetos para leitura serial, decodificação de pacotes de bytes e conversão física dos dados do sensor inercial MPU-6050, estruturado e compilado como um pacote ROS 2 (`ament_cmake`).
+Repositório com a implementação em C++ orientado a objetos para leitura serial, decodificação de pacotes de bytes e conversão física dos dados do sensor inercial MPU-6050(`ament_cmake`).
 
 ## Estrutura do Projeto
 
