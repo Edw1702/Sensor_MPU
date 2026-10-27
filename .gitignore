@@ -5,3 +5,9 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+# Compilações C++ e CMake
+exemploCpp/build/
+*.exe
+*.obj
+*.a
